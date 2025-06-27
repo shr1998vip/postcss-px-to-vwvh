@@ -1,0 +1,17 @@
+{
+  "name": "postcss-px-to-vwvh",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": false,
+  "author": "shr",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "devDependencies": {
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2"
+  }
+}
