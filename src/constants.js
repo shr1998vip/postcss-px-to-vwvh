@@ -14,7 +14,7 @@ export const defaultWidthProperties = [
   'text-indent',
   'letter-spacing',
   'column-gap',
-  'column-width',
+  'column-width'
 ]
 
 // 默认高度相关的CSS属性
@@ -33,7 +33,7 @@ export const defaultHeightProperties = [
   'border-bottom-width',
   'font-size',
   'vertical-align',
-  'row-gap',
+  'row-gap'
 ]
 
 // 默认配置
@@ -44,7 +44,7 @@ export const defaultOptions = {
   minPixelValue: 1, // 最小转换值
   widthProperties: defaultWidthProperties, // 有关宽度属性
   heightProperties: defaultHeightProperties, // 有关高度属性
-  propertyMode: 'merge', // 属性配置模式: 'merge' | 'replace'
+  propertyMode: 'merge' // 属性配置模式: 'merge' | 'replace'
 }
 
 // 复合属性处理
@@ -52,5 +52,5 @@ export const compoundProperties = {
   padding: ['vh', 'vw', 'vh', 'vw'],
   margin: ['vh', 'vw', 'vh', 'vw'],
   'border-width': ['vh', 'vw', 'vh', 'vw'],
-  'border-radius': ['vw', 'vh', 'vw', 'vh'],
+  'border-radius': ['vw', 'vh', 'vw', 'vh']
 }

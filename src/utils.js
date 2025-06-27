@@ -7,7 +7,7 @@ export const vw = (size, defaultWidth = 1920) => {
 
 export const vh = (size, defaultHeight = 1080) => {
   const clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-  if(!clientHeight) return size
+  if (!clientHeight) return size
   const scale = clientHeight / defaultHeight
   return Number((size * scale).toFixed(3))
 }

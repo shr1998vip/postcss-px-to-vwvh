@@ -11,6 +11,8 @@
   "keywords": [],
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^9.29.0",
+    "globals": "^16.2.0",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2"
   }

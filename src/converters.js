@@ -10,16 +10,12 @@ function pxToVh(pxValue, designHeight, precision) {
 
 function getTargetUnit(property, widthProperties, heightProperties) {
   // 是否高度相关
-  if (
-    heightProperties.some(prop => property.includes(prop) || property === prop)
-  ) {
+  if (heightProperties.some((prop) => property.includes(prop) || property === prop)) {
     return 'vh'
   }
 
   // 是否宽度相关
-  if (
-    widthProperties.some(prop => property.includes(prop) || property === prop)
-  ) {
+  if (widthProperties.some((prop) => property.includes(prop) || property === prop)) {
     return 'vw'
   }
 
@@ -50,16 +46,9 @@ export function pxToViewport(data, property, options, valueIndex = null) {
 
   // 处理复合属性
   if (compoundProperties[property] && valueIndex !== null) {
-    targetUnit =
-      compoundProperties[property][
-        valueIndex % compoundProperties[property].length
-      ]
+    targetUnit = compoundProperties[property][valueIndex % compoundProperties[property].length]
   } else {
-    targetUnit = getTargetUnit(
-      property,
-      options.widthProperties,
-      options.heightProperties
-    )
+    targetUnit = getTargetUnit(property, options.widthProperties, options.heightProperties)
   }
 
   if (targetUnit === 'vh') {
@@ -71,7 +60,7 @@ export function pxToViewport(data, property, options, valueIndex = null) {
 
 // 处理transform属性的特殊情况
 export function processTransform(value, options) {
-  return value.replace(/translate[XY]?\([^)]+\)/g, transformMatch => {
+  return value.replace(/translate[XY]?\([^)]+\)/g, (transformMatch) => {
     return transformMatch.replace(/(\d+(?:\.\d+)?)px/g, (match, pxValue) => {
       const numericValue = parseFloat(pxValue)
       // translateX 用vw, translateY 用vh

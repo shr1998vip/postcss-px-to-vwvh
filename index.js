@@ -1,31 +1,14 @@
 import { vh, vw } from './src/utils'
-import {
-  defaultWidthProperties,
-  defaultHeightProperties,
-  defaultOptions,
-  compoundProperties,
-} from './src/constants'
-import {
-  processProperties,
-  pxToViewport,
-  processTransform,
-} from './src/constants'
+import { defaultWidthProperties, defaultHeightProperties, defaultOptions, compoundProperties } from './src/constants'
+import { processProperties, pxToViewport, processTransform } from './src/constants'
 
 module.exports = (options = {}) => {
   const opts = { ...defaultOptions, ...options }
 
   // 根据模式处理属性配置
-  const finalWidthProperties = processProperties(
-    defaultWidthProperties,
-    options.widthProperties,
-    opts.propertyMode
-  )
+  const finalWidthProperties = processProperties(defaultWidthProperties, options.widthProperties, opts.propertyMode)
 
-  const finalHeightProperties = processProperties(
-    defaultHeightProperties,
-    options.heightProperties,
-    opts.propertyMode
-  )
+  const finalHeightProperties = processProperties(defaultHeightProperties, options.heightProperties, opts.propertyMode)
 
   // 更新 opts 中的属性
   opts.widthProperties = finalWidthProperties
@@ -45,12 +28,7 @@ module.exports = (options = {}) => {
         const targetText = transformData.reduce((total, cur, index) => {
           if (/\d+px/g.test(cur)) {
             // 对于复合属性，传入索引
-            const converted = pxToViewport(
-              cur,
-              decl.prop,
-              opts,
-              compoundProperties[decl.prop] ? index : null
-            )
+            const converted = pxToViewport(cur, decl.prop, opts, compoundProperties[decl.prop] ? index : null)
             return `${total} ${converted}`
           } else {
             return `${total} ${cur}`
@@ -59,7 +37,7 @@ module.exports = (options = {}) => {
 
         decl.value = targetText.trim()
       }
-    },
+    }
   }
 }
 
