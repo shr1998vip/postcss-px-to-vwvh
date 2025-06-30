@@ -11,7 +11,6 @@ const postcss = require('postcss')
 const semver = require('semver')
 
 const version = postcss().version
-console.log(version, 'versionversion')
 
 // 处理声明值的主函数
 function processDeclarationValue(decl, opts) {
@@ -46,7 +45,7 @@ function processDeclarationValue(decl, opts) {
 }
 
 if (semver.gte(version, '8.0.0')) {
-  console.log('我是 >= 8.0.0 的版本')
+  console.log(version, '我是 >= 8.0.0 的版本')
 
   module.exports = (options = {}) => {
     const opts = { ...defaultOptions, ...options }
@@ -73,7 +72,7 @@ if (semver.gte(version, '8.0.0')) {
   }
 } else {
   console.log('我是 < 8.0.0 的版本')
-  
+
   // PostCSS 7.x 及以下版本的兼容代码
   module.exports = postcss.plugin('postcss-px-to-vwvh', (options = {}) => {
     const opts = { ...defaultOptions, ...options }
