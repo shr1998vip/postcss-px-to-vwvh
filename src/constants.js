@@ -1,5 +1,5 @@
 // 默认宽度相关的CSS属性
-export const defaultWidthProperties = [
+const defaultWidthProperties = [
   'width',
   'min-width',
   'max-width',
@@ -18,7 +18,7 @@ export const defaultWidthProperties = [
 ]
 
 // 默认高度相关的CSS属性
-export const defaultHeightProperties = [
+const defaultHeightProperties = [
   'height',
   'min-height',
   'max-height',
@@ -37,7 +37,7 @@ export const defaultHeightProperties = [
 ]
 
 // 默认配置
-export const defaultOptions = {
+const defaultOptions = {
   designWidth: 1920, // 设计稿宽度
   designHeight: 1080, // 设计稿高度
   unitPrecision: 5, // 转换精度
@@ -48,9 +48,17 @@ export const defaultOptions = {
 }
 
 // 复合属性处理
-export const compoundProperties = {
+const compoundProperties = {
   padding: ['vh', 'vw', 'vh', 'vw'],
   margin: ['vh', 'vw', 'vh', 'vw'],
   'border-width': ['vh', 'vw', 'vh', 'vw'],
   'border-radius': ['vw', 'vh', 'vw', 'vh']
+}
+
+
+module.exports = {
+  defaultWidthProperties,
+  defaultHeightProperties,
+  defaultOptions,
+  compoundProperties
 }

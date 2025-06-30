@@ -1,6 +1,6 @@
-import { vh, vw } from './src/utils'
-import { defaultWidthProperties, defaultHeightProperties, defaultOptions, compoundProperties } from './src/constants'
-import { processProperties, pxToViewport, processTransform } from './src/constants'
+const { vh, vw } = require('./src/utils')
+const { defaultWidthProperties, defaultHeightProperties, defaultOptions, compoundProperties }  = require('./src/constants')
+const { processProperties, pxToViewport, processTransform }  = require('./src/converters') 
 
 module.exports = (options = {}) => {
   const opts = { ...defaultOptions, ...options }

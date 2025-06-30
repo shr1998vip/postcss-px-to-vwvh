@@ -1,3 +1,5 @@
+const {compoundProperties} = require('./constants')
+
 function pxToVw(pxValue, designWidth, precision) {
   const result = (pxValue / designWidth) * 100
   return `${parseFloat(result.toFixed(precision))}vw`
@@ -23,7 +25,7 @@ function getTargetUnit(property, widthProperties, heightProperties) {
 }
 
 // 合并或替换属性数组
-export function processProperties(defaultProps, userProps, mode) {
+exports.processProperties = (defaultProps, userProps, mode) => {
   if (!userProps) {
     return defaultProps
   }
@@ -35,7 +37,7 @@ export function processProperties(defaultProps, userProps, mode) {
   }
 }
 
-export function pxToViewport(data, property, options, valueIndex = null) {
+exports.pxToViewport = (data, property, options, valueIndex = null) => {
   const transformData = Number(data.slice(0, -2))
 
   if (transformData < options.minPixelValue) {
@@ -59,7 +61,7 @@ export function pxToViewport(data, property, options, valueIndex = null) {
 }
 
 // 处理transform属性的特殊情况
-export function processTransform(value, options) {
+exports.processTransform = (value, options) => {
   return value.replace(/translate[XY]?\([^)]+\)/g, (transformMatch) => {
     return transformMatch.replace(/(\d+(?:\.\d+)?)px/g, (match, pxValue) => {
       const numericValue = parseFloat(pxValue)
