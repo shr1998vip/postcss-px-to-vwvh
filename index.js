@@ -1,44 +1,102 @@
 const { vh, vw } = require('./src/utils')
-const { defaultWidthProperties, defaultHeightProperties, defaultOptions, compoundProperties }  = require('./src/constants')
-const { processProperties, pxToViewport, processTransform }  = require('./src/converters') 
+const {
+  defaultWidthProperties,
+  defaultHeightProperties,
+  defaultOptions,
+  compoundProperties
+} = require('./src/constants')
+const { processProperties, pxToViewport, processTransform, processCalcValue } = require('./src/converters')
 
-module.exports = (options = {}) => {
-  const opts = { ...defaultOptions, ...options }
+const postcss = require('postcss')
+const semver = require('semver')
 
-  // 根据模式处理属性配置
-  const finalWidthProperties = processProperties(defaultWidthProperties, options.widthProperties, opts.propertyMode)
+const version = postcss().version
+console.log(version, 'versionversion')
 
-  const finalHeightProperties = processProperties(defaultHeightProperties, options.heightProperties, opts.propertyMode)
+// 处理声明值的主函数
+function processDeclarationValue(decl, opts) {
+  // 如果没有px值，直接返回
+  if (!/\d+px/g.test(decl.value)) return
 
-  // 更新 opts 中的属性
-  opts.widthProperties = finalWidthProperties
-  opts.heightProperties = finalHeightProperties
+  // 特殊处理transform属性
+  if (decl.prop.includes('transform')) {
+    decl.value = processTransform(decl.value, opts)
+    return
+  }
 
-  return {
-    postcssPlugin: 'postcss-px-to-vwvh',
-    Declaration(decl) {
-      if (/\d+px/g.test(decl.value)) {
-        // 特殊处理transform属性
-        if (decl.prop.includes('transform')) {
-          decl.value = processTransform(decl.value, opts)
-          return
-        }
+  // 检查是否包含calc函数
+  if (decl.value.includes('calc(')) {
+    decl.value = processCalcValue(decl.value, decl.prop, opts)
+    return
+  }
 
-        const transformData = decl.value.split(/\s+/)
-        const targetText = transformData.reduce((total, cur, index) => {
-          if (/\d+px/g.test(cur)) {
-            // 对于复合属性，传入索引
-            const converted = pxToViewport(cur, decl.prop, opts, compoundProperties[decl.prop] ? index : null)
-            return `${total} ${converted}`
-          } else {
-            return `${total} ${cur}`
-          }
-        }, '')
+  // 处理普通的空格分隔值
+  const transformData = decl.value.split(/\s+/)
+  const targetText = transformData.reduce((total, cur, index) => {
+    if (/\d+px/g.test(cur)) {
+      // 对于复合属性，传入索引
+      const converted = pxToViewport(cur, decl.prop, opts, compoundProperties[decl.prop] ? index : null)
+      return `${total} ${converted}`
+    } else {
+      return `${total} ${cur}`
+    }
+  }, '')
 
-        decl.value = targetText.trim()
+  decl.value = targetText.trim()
+}
+
+if (semver.gte(version, '8.0.0')) {
+  console.log('我是 >= 8.0.0 的版本')
+
+  module.exports = (options = {}) => {
+    const opts = { ...defaultOptions, ...options }
+
+    // 根据模式处理属性配置
+    const finalWidthProperties = processProperties(defaultWidthProperties, options.widthProperties, opts.propertyMode)
+
+    const finalHeightProperties = processProperties(
+      defaultHeightProperties,
+      options.heightProperties,
+      opts.propertyMode
+    )
+
+    // 更新 opts 中的属性
+    opts.widthProperties = finalWidthProperties
+    opts.heightProperties = finalHeightProperties
+
+    return {
+      postcssPlugin: 'postcss-px-to-vwvh',
+      Declaration(decl) {
+        processDeclarationValue(decl, opts)
       }
     }
   }
+} else {
+  console.log('我是 < 8.0.0 的版本')
+  
+  // PostCSS 7.x 及以下版本的兼容代码
+  module.exports = postcss.plugin('postcss-px-to-vwvh', (options = {}) => {
+    const opts = { ...defaultOptions, ...options }
+
+    // 根据模式处理属性配置
+    const finalWidthProperties = processProperties(defaultWidthProperties, options.widthProperties, opts.propertyMode)
+
+    const finalHeightProperties = processProperties(
+      defaultHeightProperties,
+      options.heightProperties,
+      opts.propertyMode
+    )
+
+    // 更新 opts 中的属性
+    opts.widthProperties = finalWidthProperties
+    opts.heightProperties = finalHeightProperties
+
+    return (root, result) => {
+      root.walkDecls((decl) => {
+        processDeclarationValue(decl, opts)
+      })
+    }
+  })
 }
 
 module.exports.postcss = true

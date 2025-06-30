@@ -1,4 +1,4 @@
-const {compoundProperties} = require('./constants')
+const { compoundProperties } = require('./constants')
 
 function pxToVw(pxValue, designWidth, precision) {
   const result = (pxValue / designWidth) * 100
@@ -81,5 +81,16 @@ exports.processTransform = (value, options) => {
         return pxToVw(numericValue, options.designWidth, options.unitPrecision)
       }
     })
+  })
+}
+
+// 处理calc函数的辅助函数
+exports.processCalcValue = (value, prop, opts) => {
+  return value.replace(/calc\(([^)]+)\)/g, (match, calcContent) => {
+    // 在calc内容中查找px值并转换
+    const processedCalcContent = calcContent.replace(/(\d+(?:\.\d+)?)px/g, (pxMatch, pxValue) => {
+      return pxToViewport(pxMatch, prop, opts)
+    })
+    return `calc(${processedCalcContent})`
   })
 }

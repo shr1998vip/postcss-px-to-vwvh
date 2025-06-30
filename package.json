@@ -1,19 +1,40 @@
 {
   "name": "postcss-px-to-vwvh",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.4",
+  "description": "大屏项目自适应各类分辨率屏幕",
   "main": "index.js",
   "private": false,
   "author": "shr",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "postcss",
+    "css",
+    "postcss-plugin",
+    "px",
+    "vw",
+    "vh",
+    "viewport",
+    "responsive",
+    "large-screen",
+    "adaptive"
+  ],
+  "homepage": "https://github.com/shr1998vip/postcss-px-to-vwvh#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shr1998vip/postcss-px-to-vwvh.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shr1998vip/postcss-px-to-vwvh/issues"
+  },
   "license": "ISC",
   "devDependencies": {
     "eslint": "^9.29.0",
     "globals": "^16.2.0",
-    "postcss": "^8.5.6",
     "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "semver": "^7.7.2"
   }
 }
