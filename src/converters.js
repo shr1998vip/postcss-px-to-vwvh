@@ -24,20 +24,7 @@ function getTargetUnit(property, widthProperties, heightProperties) {
   return 'vw'
 }
 
-// 合并或替换属性数组
-exports.processProperties = (defaultProps, userProps, mode) => {
-  if (!userProps) {
-    return defaultProps
-  }
-
-  if (mode === 'replace') {
-    return userProps
-  } else {
-    return [...new Set([...defaultProps, ...userProps])]
-  }
-}
-
-exports.pxToViewport = (data, property, options, valueIndex = null) => {
+function pxToViewport(data, property, options, valueIndex = null) {
   const transformData = Number(data.slice(0, -2))
 
   if (transformData < options.minPixelValue) {
@@ -60,8 +47,22 @@ exports.pxToViewport = (data, property, options, valueIndex = null) => {
   }
 }
 
+// 合并或替换属性数组
+function processProperties(defaultProps, userProps, mode) {
+  if (!userProps) {
+    return defaultProps
+  }
+
+  if (mode === 'replace') {
+    return userProps
+  } else {
+    return [...new Set([...defaultProps, ...userProps])]
+  }
+}
+
+
 // 处理transform属性的特殊情况
-exports.processTransform = (value, options) => {
+function processTransform (value, options) {
   return value.replace(/translate[XY]?\([^)]+\)/g, (transformMatch) => {
     return transformMatch.replace(/(\d+(?:\.\d+)?)px/g, (match, pxValue) => {
       const numericValue = parseFloat(pxValue)
@@ -85,7 +86,7 @@ exports.processTransform = (value, options) => {
 }
 
 // 处理calc函数的辅助函数
-exports.processCalcValue = (value, prop, opts) => {
+function processCalcValue (value, prop, opts) {
   return value.replace(/calc\(([^)]+)\)/g, (match, calcContent) => {
     // 在calc内容中查找px值并转换
     const processedCalcContent = calcContent.replace(/(\d+(?:\.\d+)?)px/g, (pxMatch, pxValue) => {
@@ -93,4 +94,11 @@ exports.processCalcValue = (value, prop, opts) => {
     })
     return `calc(${processedCalcContent})`
   })
+}
+
+module.exports = {
+  pxToViewport,
+  processProperties,
+  processTransform,
+  processCalcValue
 }
