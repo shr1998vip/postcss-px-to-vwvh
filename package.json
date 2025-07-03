@@ -1,6 +1,6 @@
 {
   "name": "postcss-px-to-vwvh",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "大屏项目自适应各类分辨率屏幕",
   "main": "index.js",
   "private": false,
@@ -32,6 +32,7 @@
   "devDependencies": {
     "eslint": "^9.29.0",
     "globals": "^16.2.0",
+    "postcss": "^8.5.6",
     "prettier": "^3.6.2"
   },
   "dependencies": {

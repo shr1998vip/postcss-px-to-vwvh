@@ -5,7 +5,7 @@ const {
   defaultOptions,
   compoundProperties
 } = require('./src/constants')
-const { processProperties, pxToViewport, processTransform, processCalcValue } = require('./src/converters')
+const { processProperties, pxToViewport, processTransform, processCalcValue, processFn } = require('./src/converters')
 
 const postcss = require('postcss')
 const semver = require('semver')
@@ -27,6 +27,11 @@ function processDeclarationValue(decl, opts) {
   if (decl.value.includes('calc(')) {
     decl.value = processCalcValue(decl.value, decl.prop, opts)
     return
+  }
+
+  // 检查是否带有函数 如 backdrop-filter: blur(5px);
+  if (/\w+\([^)]*\d+px[^)]*\)/g.test(decl.value)) { 
+    decl.value = processFn(decl.value, decl.prop, opts)
   }
 
   // 处理普通的空格分隔值

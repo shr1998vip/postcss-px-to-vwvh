@@ -21,7 +21,7 @@ function getTargetUnit(property, widthProperties, heightProperties) {
     return 'vw'
   }
 
-  return 'vw'
+  return 'vh'
 }
 
 function pxToViewport(data, property, options, valueIndex = null) {
@@ -60,9 +60,8 @@ function processProperties(defaultProps, userProps, mode) {
   }
 }
 
-
 // 处理transform属性的特殊情况
-function processTransform (value, options) {
+function processTransform(value, options) {
   return value.replace(/translate[XY]?\([^)]+\)/g, (transformMatch) => {
     return transformMatch.replace(/(\d+(?:\.\d+)?)px/g, (match, pxValue) => {
       const numericValue = parseFloat(pxValue)
@@ -86,7 +85,7 @@ function processTransform (value, options) {
 }
 
 // 处理calc函数的辅助函数
-function processCalcValue (value, prop, opts) {
+function processCalcValue(value, prop, opts) {
   return value.replace(/calc\(([^)]+)\)/g, (match, calcContent) => {
     // 在calc内容中查找px值并转换
     const processedCalcContent = calcContent.replace(/(\d+(?:\.\d+)?)px/g, (pxMatch, pxValue) => {
@@ -96,9 +95,20 @@ function processCalcValue (value, prop, opts) {
   })
 }
 
+// 特殊处理包含CSS函数的值
+function processFn(value, prop, opts) {
+  return value.replace(/(\w+)\(([^)]*)\)/g, (match, funcName, params) => {
+    const processedParams = params.replace(/(\d+(?:\.\d+)?)px/g, (pxMatch, num) => {
+      return pxToViewport(pxMatch, prop, opts) // 或者调用 pxToViewport(pxMatch, decl.prop, opts)
+    })
+    return `${funcName}(${processedParams})`
+  })
+}
+
 module.exports = {
   pxToViewport,
   processProperties,
   processTransform,
-  processCalcValue
+  processCalcValue,
+  processFn
 }
