@@ -105,10 +105,36 @@ function processFn(value, prop, opts) {
   })
 }
 
+// 处理包含负数px值的函数
+function processMinus(value, decl, opts) {
+  // 使用全局正则替换所有负数px值
+  return value.replace(/-(\d+(?:\.\d+)?)px/g, (match, pxValue) => {
+    const numericValue = parseFloat(pxValue)
+    
+    // 检查最小像素值
+    if (numericValue < opts.minPixelValue) {
+      return match
+    }
+    
+    // 获取目标单位
+    const targetUnit = getTargetUnit(decl.prop, opts.widthProperties, opts.heightProperties)
+    
+    // 转换为对应的viewport单位（保持负号）
+    if (targetUnit === 'vh') {
+      const result = (numericValue / opts.designHeight) * 100
+      return `-${parseFloat(result.toFixed(opts.unitPrecision))}vh`
+    } else {
+      const result = (numericValue / opts.designWidth) * 100
+      return `-${parseFloat(result.toFixed(opts.unitPrecision))}vw`
+    }
+  })
+}
+
 module.exports = {
   pxToViewport,
   processProperties,
   processTransform,
   processCalcValue,
-  processFn
+  processFn,
+  processMinus
 }

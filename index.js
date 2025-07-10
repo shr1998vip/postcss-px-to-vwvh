@@ -5,7 +5,14 @@ const {
   defaultOptions,
   compoundProperties
 } = require('./src/constants')
-const { processProperties, pxToViewport, processTransform, processCalcValue, processFn } = require('./src/converters')
+const {
+  processProperties,
+  pxToViewport,
+  processTransform,
+  processCalcValue,
+  processFn,
+  processMinus
+} = require('./src/converters')
 
 const postcss = require('postcss')
 const semver = require('semver')
@@ -16,6 +23,12 @@ const version = postcss().version
 function processDeclarationValue(decl, opts) {
   // 如果没有px值，直接返回
   if (!/\d+px/g.test(decl.value)) return
+
+  // // 检查是否包含负数px值
+  // if (/-\d+px/g.test(decl.value)) {
+  //   decl.value = processMinus(decl.value, decl, opts)
+  //   return
+  // }
 
   // 特殊处理transform属性
   if (decl.prop.includes('transform')) {
@@ -30,7 +43,7 @@ function processDeclarationValue(decl, opts) {
   }
 
   // 检查是否带有函数 如 backdrop-filter: blur(5px);
-  if (/\w+\([^)]*\d+px[^)]*\)/g.test(decl.value)) { 
+  if (/\w+\([^)]*\d+px[^)]*\)/g.test(decl.value)) {
     decl.value = processFn(decl.value, decl.prop, opts)
   }
 
