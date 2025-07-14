@@ -7,11 +7,11 @@ const {
 } = require('./src/constants')
 const {
   processProperties,
-  pxToViewport,
   processTransform,
   processCalcValue,
   processFn,
-  processMinus
+  processMinus,
+  processSpacing
 } = require('./src/converters')
 
 const postcss = require('postcss')
@@ -23,12 +23,6 @@ const version = postcss().version
 function processDeclarationValue(decl, opts) {
   // 如果没有px值，直接返回
   if (!/\d+px/g.test(decl.value)) return
-
-  // // 检查是否包含负数px值
-  // if (/-\d+px/g.test(decl.value)) {
-  //   decl.value = processMinus(decl.value, decl, opts)
-  //   return
-  // }
 
   // 特殊处理transform属性
   if (decl.prop.includes('transform')) {
@@ -45,21 +39,17 @@ function processDeclarationValue(decl, opts) {
   // 检查是否带有函数 如 backdrop-filter: blur(5px);
   if (/\w+\([^)]*\d+px[^)]*\)/g.test(decl.value)) {
     decl.value = processFn(decl.value, decl.prop, opts)
+    return
+  }
+
+  // 检查是否包含负数px值
+  if (/-\d+px/g.test(decl.value)) {
+    decl.value = processMinus(decl.value, decl, opts)
+    return
   }
 
   // 处理普通的空格分隔值
-  const transformData = decl.value.split(/\s+/)
-  const targetText = transformData.reduce((total, cur, index) => {
-    if (/\d+px/g.test(cur)) {
-      // 对于复合属性，传入索引
-      const converted = pxToViewport(cur, decl.prop, opts, compoundProperties[decl.prop] ? index : null)
-      return `${total} ${converted}`
-    } else {
-      return `${total} ${cur}`
-    }
-  }, '')
-
-  decl.value = targetText.trim()
+  decl.value = processSpacing((decl.value, decl.prop, opts))
 }
 
 if (semver.gte(version, '8.0.0')) {

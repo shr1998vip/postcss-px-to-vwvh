@@ -1,6 +1,6 @@
 {
   "name": "postcss-px-to-vwvh",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "大屏项目自适应各类分辨率屏幕",
   "main": "index.js",
   "private": false,

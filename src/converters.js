@@ -110,15 +110,15 @@ function processMinus(value, decl, opts) {
   // 使用全局正则替换所有负数px值
   return value.replace(/-(\d+(?:\.\d+)?)px/g, (match, pxValue) => {
     const numericValue = parseFloat(pxValue)
-    
+
     // 检查最小像素值
     if (numericValue < opts.minPixelValue) {
       return match
     }
-    
+
     // 获取目标单位
     const targetUnit = getTargetUnit(decl.prop, opts.widthProperties, opts.heightProperties)
-    
+
     // 转换为对应的viewport单位（保持负号）
     if (targetUnit === 'vh') {
       const result = (numericValue / opts.designHeight) * 100
@@ -130,11 +130,28 @@ function processMinus(value, decl, opts) {
   })
 }
 
+// 处理普通的空格分隔值
+function processSpacing(value, decl, opts) {
+  const transformData = decl.value.split(/\s+/)
+  const targetText = transformData.reduce((total, cur, index) => {
+    if (/\d+px/g.test(cur)) {
+      // 对于复合属性，传入索引
+      const converted = pxToViewport(cur, decl.prop, opts, compoundProperties[decl.prop] ? index : null)
+      return `${total} ${converted}`
+    } else {
+      return `${total} ${cur}`
+    }
+  }, '')
+
+  return targetText
+}
+
 module.exports = {
   pxToViewport,
   processProperties,
   processTransform,
   processCalcValue,
   processFn,
-  processMinus
+  processMinus,
+  processSpacing
 }
