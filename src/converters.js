@@ -106,25 +106,25 @@ function processFn(value, prop, opts) {
 }
 
 // 处理包含负数px值的函数
-function processMinus(value, decl, opts) {
+function processMinus(value, prop, opts) {
   // 使用全局正则替换所有负数px值
   return value.replace(/-(\d+(?:\.\d+)?)px/g, (match, pxValue) => {
     const numericValue = parseFloat(pxValue)
     // 创建正数的px字符串用于转换
     const positivePxString = `${numericValue}px`
     // 转换后添加负号
-    const converted = pxToViewport(positivePxString, decl.prop, opts)
+    const converted = pxToViewport(positivePxString, prop, opts)
     return `-${converted}`
   })
 }
 
 // 处理普通的空格分隔值
-function processSpacing(value, decl, opts) {
-  const transformData = decl.value.split(/\s+/)
+function processSpacing(value, prop, opts) {
+  const transformData = value.split(/\s+/)
   const targetText = transformData.reduce((total, cur, index) => {
     if (/\d+px/g.test(cur)) {
       // 对于复合属性，传入索引
-      const converted = pxToViewport(cur, decl.prop, opts, compoundProperties[decl.prop] ? index : null)
+      const converted = pxToViewport(cur, prop, opts, compoundProperties[prop] ? index : null)
       return `${total} ${converted}`
     } else {
       return `${total} ${cur}`
