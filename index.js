@@ -44,12 +44,12 @@ function processDeclarationValue(decl, opts) {
 
   // 检查是否包含负数px值
   if (/-\d+px/g.test(decl.value)) {
-    decl.value = processMinus(decl.value, decl, opts)
+    decl.value = processMinus(decl.value, decl.prop, opts)
     return
   }
 
   // 处理普通的空格分隔值
-  decl.value = processSpacing((decl.value, decl.prop, opts))
+  decl.value = processSpacing(decl.value, decl.prop, opts)
 }
 
 if (semver.gte(version, '8.0.0')) {
