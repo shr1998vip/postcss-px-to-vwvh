@@ -99,7 +99,7 @@ function processCalcValue(value, prop, opts) {
 function processFn(value, prop, opts) {
   return value.replace(/(\w+)\(([^)]*)\)/g, (match, funcName, params) => {
     const processedParams = params.replace(/(\d+(?:\.\d+)?)px/g, (pxMatch, num) => {
-      return pxToViewport(pxMatch, prop, opts) // 或者调用 pxToViewport(pxMatch, decl.prop, opts)
+      return pxToViewport(pxMatch, prop, opts)
     })
     return `${funcName}(${processedParams})`
   })
@@ -110,23 +110,11 @@ function processMinus(value, decl, opts) {
   // 使用全局正则替换所有负数px值
   return value.replace(/-(\d+(?:\.\d+)?)px/g, (match, pxValue) => {
     const numericValue = parseFloat(pxValue)
-
-    // 检查最小像素值
-    if (numericValue < opts.minPixelValue) {
-      return match
-    }
-
-    // 获取目标单位
-    const targetUnit = getTargetUnit(decl.prop, opts.widthProperties, opts.heightProperties)
-
-    // 转换为对应的viewport单位（保持负号）
-    if (targetUnit === 'vh') {
-      const result = (numericValue / opts.designHeight) * 100
-      return `-${parseFloat(result.toFixed(opts.unitPrecision))}vh`
-    } else {
-      const result = (numericValue / opts.designWidth) * 100
-      return `-${parseFloat(result.toFixed(opts.unitPrecision))}vw`
-    }
+    // 创建正数的px字符串用于转换
+    const positivePxString = `${numericValue}px`
+    // 转换后添加负号
+    const converted = pxToViewport(positivePxString, decl.prop, opts)
+    return `-${converted}`
   })
 }
 
